@@ -8,11 +8,16 @@ local _, ns = ...
 
 local button
 
+-- Around the edge; on a square minimap (ForeverMap) out to its corners.
 local function Position()
 	local angle = math.rad(ns.db.minimap.angle or 225)
-	local radius = (Minimap:GetWidth() / 2) + 5
+	local x, y = math.cos(angle), math.sin(angle)
+	if GetMinimapShape and GetMinimapShape() == "SQUARE" then
+		x = math.max(-1, math.min(1, x * 1.414))
+		y = math.max(-1, math.min(1, y * 1.414))
+	end
 	button:ClearAllPoints()
-	button:SetPoint("CENTER", Minimap, "CENTER", math.cos(angle) * radius, math.sin(angle) * radius)
+	button:SetPoint("CENTER", Minimap, "CENTER", x * (Minimap:GetWidth() / 2 + 5), y * (Minimap:GetHeight() / 2 + 5))
 end
 
 local function OnDragUpdate()
@@ -73,6 +78,8 @@ local function Create()
 	end)
 	button:SetScript("OnLeave", GameTooltip_Hide)
 	Position()
+	-- again once every addon has logged in: ForeverMap may make the minimap square
+	C_Timer.After(0, Position)
 	UpdateCount()
 end
 
