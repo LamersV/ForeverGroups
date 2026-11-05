@@ -8,16 +8,19 @@ local _, ns = ...
 
 local button
 
--- Around the edge; on a square minimap (ForeverMap) out to its corners.
+-- Around the edge. On a square minimap (ForeverMap) inside the square, along
+-- its border and into its corners.
 local function Position()
 	local angle = math.rad(ns.db.minimap.angle or 225)
 	local x, y = math.cos(angle), math.sin(angle)
+	local halfWidth, halfHeight = Minimap:GetWidth() / 2 + 5, Minimap:GetHeight() / 2 + 5
 	if GetMinimapShape and GetMinimapShape() == "SQUARE" then
 		x = math.max(-1, math.min(1, x * 1.414))
 		y = math.max(-1, math.min(1, y * 1.414))
+		halfWidth, halfHeight = Minimap:GetWidth() / 2 - 18, Minimap:GetHeight() / 2 - 18
 	end
 	button:ClearAllPoints()
-	button:SetPoint("CENTER", Minimap, "CENTER", x * (Minimap:GetWidth() / 2 + 5), y * (Minimap:GetHeight() / 2 + 5))
+	button:SetPoint("CENTER", Minimap, "CENTER", x * halfWidth, y * halfHeight)
 end
 
 local function OnDragUpdate()
