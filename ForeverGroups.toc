@@ -1,0 +1,27 @@
+## Interface: 16001
+## Title: |cff4fc3f7Forever|rGroups
+## Notes: Group finder: search with filters, players and groups lists, quick invite and whisper. Type /fg
+## Notes-ptBR: Procurar grupo: busca com filtros, listas de jogadores e grupos, convite e sussurro rápidos. Digite /fg
+## Author: Lamers
+## Version: 1.0.0
+## IconAtlas: friends-icon-tab-quickJoin
+## Category: Group Finder
+## Category-ptBR: Localizador de Grupos
+## SavedVariables: ForeverGroupsDB
+## SavedVariablesPerCharacter: ForeverGroupsCharDB
+## AddonCompartmentFunc: ForeverGroups_OnCompartmentClick
+## AddonCompartmentFuncOnEnter: ForeverGroups_OnCompartmentEnter
+## AddonCompartmentFuncOnLeave: ForeverGroups_OnCompartmentLeave
+
+Core.lua
+Locale.lua
+Data.lua
+Whispers.lua
+UI\Widgets.lua
+UI\List.lua
+UI\WhisperLog.lua
+UI\Filters.lua
+UI\Window.lua
+BlizzardTab.lua
+Minimap.lua
+Settings.lua

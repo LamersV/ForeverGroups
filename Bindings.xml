@@ -1,0 +1,6 @@
+<!-- Loaded by the client from the addon folder on its own; not listed in the TOC. -->
+<Bindings>
+	<Binding name="FOREVERGROUPS_TOGGLE" category="BINDING_HEADER_FOREVERGROUPS">
+		ForeverGroups_Toggle()
+	</Binding>
+</Bindings>
