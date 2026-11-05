@@ -36,9 +36,10 @@ end
 
 --[[ Position and size (centre offset from the screen centre) ]]--
 
+-- The frame is a child of UIParent: its own coordinates times its scale are UIParent's.
 local function SaveGeometry(frame)
 	local saved = ns.db.window
-	local scale = frame:GetScale() / UIParent:GetScale()
+	local scale = frame:GetScale()
 	local x, y = frame:GetCenter()
 	local cx, cy = UIParent:GetCenter()
 	if x and cx then
@@ -53,7 +54,7 @@ local function Place(frame)
 	FrameUtil.UpdateScaleForFit(frame, 20, 20)
 	frame:ClearAllPoints()
 	if saved.x and saved.y then
-		local scale = frame:GetScale() / UIParent:GetScale()
+		local scale = frame:GetScale()
 		frame:SetPoint("CENTER", UIParent, "CENTER", saved.x / scale, saved.y / scale)
 	else
 		frame:SetPoint("TOP", UIParent, "TOP", 0, -116)
@@ -122,7 +123,8 @@ local function Build()
 	local drag = CreateFrame("Button", nil, content, "PanelDragBarTemplate")
 	drag:SetAllPoints(content.TitleContainer)
 	drag:Init(frame)
-	drag:HookScript("OnDragStop", function() SaveGeometry(frame) end)
+	-- the drag bar moves the window on mouse down/up (it has no drag events)
+	drag:HookScript("OnMouseUp", function() SaveGeometry(frame) end)
 
 	local grip = CreateFrame("Button", nil, content, "PanelResizeButtonTemplate")
 	grip:SetPoint("BOTTOMRIGHT", -4, 4)
@@ -153,7 +155,8 @@ local function Build()
 		ns.Data:RequestGuildRoster()
 		if not ns.Data:EnsureFinder() then ns:Print(L.FINDER_COMBAT) end
 	end)
-	frame:SetScript("OnHide", function()
+	frame:SetScript("OnHide", function(self)
+		SaveGeometry(self)
 		PlaySound(SOUNDKIT.IG_CHARACTER_INFO_CLOSE)
 	end)
 	tinsert(UISpecialFrames, "ForeverGroupsFrame")
