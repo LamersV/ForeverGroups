@@ -15,6 +15,7 @@
 
 Core.lua
 Locale.lua
+Messages.lua
 Data.lua
 Whispers.lua
 UI\Widgets.lua

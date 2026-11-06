@@ -93,8 +93,8 @@ ns.defaults = {
 		collapsed = {}, -- filter sections the player folded
 	},
 	char = {
-		askMessage = nil, -- nil: the default message from the locale
-		inviteMessage = nil,
+		messages = {}, -- [language] = {ask = ..., invite = ...}; missing: the default message
+		messageLanguage = nil, -- nil: the game's language
 	},
 }
 

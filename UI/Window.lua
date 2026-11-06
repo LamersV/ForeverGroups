@@ -147,6 +147,33 @@ local function Build()
 	hint:SetPoint("BOTTOMRIGHT", -28, 8)
 	hint:SetText(L.LIST_HINT)
 
+	-- language of the whispers sent by "Invite" and "Ask to join"
+	local language = ns.Widgets.Link(content, "", function(self)
+		MenuUtil.CreateContextMenu(self, function(_, root)
+			root:SetTag("MENU_FOREVERGROUPS_MESSAGE_LANGUAGE")
+			for _, code in ipairs(ns.Messages.order) do
+				root:CreateRadio(ns.Messages.languages[code].name,
+					function(key) return ns.Data:MessageLanguage() == key end,
+					function(key) ns.Data:SetMessageLanguage(key) end, code)
+			end
+		end)
+	end)
+	language:SetPoint("RIGHT", hint, "LEFT", -18, 0)
+	local function ShowLanguage()
+		local code = ns.Data:MessageLanguage()
+		language:SetText(L.MESSAGE_LANGUAGE:format(ns.Messages.languages[code].name))
+		language:SetWidth(language:GetFontString():GetStringWidth() + 2)
+	end
+	ShowLanguage()
+	ns:On("MessageLanguageChanged", ShowLanguage)
+	language:SetScript("OnEnter", function(self)
+		GameTooltip:SetOwner(self, "ANCHOR_TOP")
+		GameTooltip:SetText(L.MESSAGE_LANGUAGE_TITLE, 1, 1, 1)
+		GameTooltip:AddLine(L.MESSAGE_LANGUAGE_TIP, nil, nil, nil, true)
+		GameTooltip:Show()
+	end)
+	language:SetScript("OnLeave", GameTooltip_Hide)
+
 	SideTabs(frame)
 
 	frame:SetScript("OnShow", function()

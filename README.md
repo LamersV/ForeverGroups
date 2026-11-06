@@ -18,6 +18,7 @@ Localizador de grupos para o WoW Forever, feito do zero para substituir o LFG Fo
 - **Listas** de grupos e jogadores com os mesmos ícones da Blizzard. Seu anúncio vem primeiro, depois guilda e amigos. Jogadores podem ser ordenados por recentes, antigos, nível ou classe.
 - **Ações por linha**: convidar e pedir para entrar, com mensagens prontas. Clique direito abre o menu da Blizzard (sussurrar, denunciar...), e Shift+clique abre um sussurro.
 - **Mensagens com marcadores**: `%class%`, `%level%`, `%talents%`, `%points%`, `%role%`, `%name%` e `%dungeon%`. São salvas por personagem.
+- **Idioma das mensagens**: português, inglês ou espanhol, escolhido no rodapé da janela ou nas configurações. Cada idioma tem o seu texto, e classe, funções e árvore de talentos saem no idioma escolhido. Os nomes das atividades (`%dungeon%`) ficam no idioma do jogo.
 - **Registro de sussurros** desde o login, com contador de não lidos na aba e no minimapa e ações Responder, Onde está, Convidar e Remover.
 - **Verificar funções** do grupo, para líder ou assistente.
 - Abas laterais para criar anúncio, procurar grupos e a Lista de Quem da Blizzard.

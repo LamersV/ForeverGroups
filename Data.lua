@@ -655,34 +655,40 @@ function Data:ReadTalents()
 	return trees
 end
 
--- "proteção" (the tree with most points) and "11/5/35".
-function Data:TalentWords()
+-- "proteção" (the tree with most points, in the message language) and "11/5/35".
+function Data:TalentWords(language)
 	local ok, trees = pcall(self.ReadTalents, self)
 	if not ok or not trees then return "", "" end
-	local best, points = nil, {}
-	for _, tree in ipairs(trees) do
+	local best, bestIndex, points = nil, nil, {}
+	for index, tree in ipairs(trees) do
 		points[#points + 1] = tree.spent
-		if tree.spent > 0 and (not best or tree.spent > best.spent) then best = tree end
+		if tree.spent > 0 and (not best or tree.spent > best.spent) then
+			best, bestIndex = tree, index
+		end
 	end
-	return best and best.name and best.name:lower() or "", table.concat(points, "/")
+	if not best then return "", table.concat(points, "/") end
+	local _, class = UnitClass("player")
+	local name = ns.Messages:TreeName(language, class, bestIndex, best.name and best.name:lower())
+	return name, table.concat(points, "/")
 end
 
 
 --[[ Whisper messages ]]--
 
-local function JoinWords(words)
+local function JoinWords(words, language)
 	if #words <= 1 then return words[1] or "" end
-	return table.concat(words, ", ", 1, #words - 1) .. " " .. L.OR .. " " .. words[#words]
+	local word = ns.Messages:Get(language).word_or
+	return table.concat(words, ", ", 1, #words - 1) .. " " .. word .. " " .. words[#words]
 end
 
-local function RoleWords()
+local function RoleWords(language)
 	local roles = C_LFGListRoles and C_LFGListRoles.GetRoles and C_LFGListRoles.GetRoles()
 	if not roles then return "" end
-	local words = {}
-	if roles.tank then words[#words + 1] = L.WORD_TANK end
-	if roles.healer then words[#words + 1] = L.WORD_HEALER end
-	if roles.dps then words[#words + 1] = L.WORD_DAMAGE end
-	return JoinWords(words)
+	local words, info = {}, ns.Messages:Get(language)
+	if roles.tank then words[#words + 1] = info.tank end
+	if roles.healer then words[#words + 1] = info.healer end
+	if roles.dps then words[#words + 1] = info.damage end
+	return JoinWords(words, language)
 end
 
 -- Fills %placeholders%; an empty one leaves no "()" or double space behind.
@@ -696,27 +702,68 @@ local function Fill(template, values)
 	return strtrim(text)
 end
 
-function Data:AskMessage()
-	return ns.char.askMessage or L.DEFAULT_ASK_MESSAGE
+-- Language the messages go out in (chosen at the bottom of the window).
+function Data:MessageLanguage()
+	local code = ns.char.messageLanguage
+	return ns.Messages.languages[code] and code or ns.Messages.client
 end
 
-function Data:InviteMessage()
-	return ns.char.inviteMessage or L.DEFAULT_INVITE_MESSAGE
+function Data:SetMessageLanguage(code)
+	ns.char.messageLanguage = code
+	ns:Fire("MessageLanguageChanged")
 end
+
+-- The message the player wrote for a language, or its default.
+-- kind: "ask" or "invite".
+function Data:Message(kind, language)
+	language = language or self:MessageLanguage()
+	local own = ns.char.messages[language]
+	return own and own[kind] or ns.Messages:Get(language)[kind]
+end
+
+-- Saves a message; empty or equal to the default goes back to the default.
+function Data:SetMessage(kind, language, text)
+	text = strtrim(text or "")
+	local messages = ns.char.messages
+	local own = messages[language] or {}
+	own[kind] = (text ~= "" and text ~= ns.Messages:Get(language)[kind]) and text or nil
+	messages[language] = next(own) and own or nil
+end
+
+function Data:AskMessage(language)
+	return self:Message("ask", language)
+end
+
+function Data:InviteMessage(language)
+	return self:Message("invite", language)
+end
+
+-- Messages saved before there were languages belong to the game's language.
+ns:On("Loaded", function()
+	local char = ns.char
+	if char.askMessage or char.inviteMessage then
+		local own = char.messages[ns.Messages.client] or {}
+		own.ask = own.ask or char.askMessage
+		own.invite = own.invite or char.inviteMessage
+		char.messages[ns.Messages.client] = own
+		char.askMessage, char.inviteMessage = nil, nil
+	end
+end)
 
 -- The "ask to join" whisper, or nil when it is off or empty.
 function Data:BuildAskMessage(target)
 	if not ns.db.askWhisper then return nil end
-	local template = self:AskMessage()
+	local language = self:MessageLanguage()
+	local template = self:AskMessage(language)
 	if not template:find("%S") then return nil end
 	local _, class = UnitClass("player")
-	local talents, points = self:TalentWords()
+	local talents, points = self:TalentWords(language)
 	return Fill(template, {
-		class = (ns.ClassName(class) or ""):lower(),
+		class = ns.Messages:ClassName(language, class):lower(),
 		level = UnitLevel("player"),
 		talents = talents,
 		points = points,
-		role = RoleWords(),
+		role = RoleWords(language),
 		name = target and Readable(target, nil) and Ambiguate(target, "short") or "",
 	})
 end
@@ -735,14 +782,15 @@ end
 -- The whisper that goes with an invite, or nil.
 function Data:BuildInviteMessage(target)
 	if not ns.db.inviteWhisper or not LeadsOrSolo() then return nil end
-	local template = self:InviteMessage()
+	local language = self:MessageLanguage()
+	local template = self:InviteMessage(language)
 	if not template:find("%S") then return nil end
 	local entry = C_LFGList.GetActiveEntryInfo()
 	local names = entry and self:ActivityNames(entry.activityIDs) or self:ActivityNames(self.selectedActivities())
 	-- without an activity the message would read "join ?"
 	if template:find("%%dungeon%%") and not names then return nil end
 	return Fill(template, {
-		dungeon = names and JoinWords(names) or "",
+		dungeon = names and JoinWords(names, language) or "",
 		name = target and Readable(target, nil) and Ambiguate(target, "short") or "",
 	})
 end

@@ -40,25 +40,31 @@ local function Build(page)
 	scroll:SetScrollChild(content)
 	scroll:HookScript("OnSizeChanged", function(self, width) content:SetWidth(width) end)
 
-	local db, char = ns.db, ns.char
+	local db = ns.db
 	local y = -10
 	local title = content:CreateFontString(nil, "ARTWORK", "GameFontHighlightHuge")
 	title:SetPoint("TOPLEFT", 16, y)
 	title:SetText(ns.title .. "  |cff888888" .. ns.version .. "|r")
 	y = y - 40
 
-	-- messages
+	-- messages, in the language chosen here or at the bottom of the window
 	y = Header(content, L.SET_MESSAGES, y)
+	local languages = {}
+	for _, code in ipairs(ns.Messages.order) do
+		languages[#languages + 1] = {code, ns.Messages.languages[code].name}
+	end
+	local language = W.Cycle(content, L.SET_MESSAGE_LANGUAGE, languages,
+		function() return ns.Data:MessageLanguage() end,
+		function(code) ns.Data:SetMessageLanguage(code) end, 220)
+	language:SetPoint("TOPLEFT", 20, y - 2)
+	y = y - 34
 	local ask = W.Check(content, L.SET_ASK_WHISPER, function() return db.askWhisper end,
 		function(value) db.askWhisper = value end, L.SET_ASK_WHISPER_TIP)
 	ask:SetPoint("TOPLEFT", 16, y)
 	y = y - 30
 	local askBox = W.MessageBox(content, L.SET_ASK_MESSAGE, 520,
 		function() return ns.Data:AskMessage() end,
-		function(text)
-			text = strtrim(text)
-			char.askMessage = (text ~= "" and text ~= L.DEFAULT_ASK_MESSAGE) and text or nil
-		end)
+		function(text) ns.Data:SetMessage("ask", ns.Data:MessageLanguage(), text) end)
 	askBox:SetPoint("TOPLEFT", 46, y)
 	y = y - 48
 	Note(content, L.SET_ASK_PLACEHOLDERS, y, 46)
@@ -70,16 +76,24 @@ local function Build(page)
 	y = y - 30
 	local inviteBox = W.MessageBox(content, L.SET_INVITE_MESSAGE, 520,
 		function() return ns.Data:InviteMessage() end,
-		function(text)
-			text = strtrim(text)
-			char.inviteMessage = (text ~= "" and text ~= L.DEFAULT_INVITE_MESSAGE) and text or nil
-		end)
+		function(text) ns.Data:SetMessage("invite", ns.Data:MessageLanguage(), text) end)
 	inviteBox:SetPoint("TOPLEFT", 46, y)
 	y = y - 48
 	Note(content, L.SET_INVITE_PLACEHOLDERS, y, 46)
 	y = y - 26
-	Note(content, L.SET_PER_CHARACTER, y, 46)
-	y = y - 30
+	local perCharacter = Note(content, L.SET_PER_CHARACTER, y, 46)
+	y = y - math.max(30, math.ceil(perCharacter:GetStringHeight()) + 14)
+
+	-- another language chosen (here or in the window): show its messages
+	ns:On("MessageLanguageChanged", function()
+		for holder, get in pairs({[askBox] = ns.Data.AskMessage, [inviteBox] = ns.Data.InviteMessage}) do
+			if not holder.EditBox:HasFocus() then
+				holder.EditBox:SetText(get(ns.Data))
+				holder.EditBox:SetCursorPosition(0)
+			end
+		end
+		if language:IsVisible() then language:GetScript("OnShow")(language) end
+	end)
 
 	-- search
 	y = Header(content, L.SET_SEARCH, y)

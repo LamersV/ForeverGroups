@@ -9,7 +9,6 @@ local L = {
 	WINDOW_RESET = "window position and size reset.",
 	COMBAT_BLIZZARD = "Blizzard's Group Finder cannot be opened by an addon in combat.",
 	FINDER_COMBAT = "The group finder could not be loaded in combat. Try again after the fight.",
-	OR = "or",
 
 	-- side tabs
 	TAB_CREATE = "Create listing",
@@ -91,11 +90,10 @@ local L = {
 	WHERE = "Where",
 
 	-- messages
-	WORD_TANK = "tank",
-	WORD_HEALER = "healer",
-	WORD_DAMAGE = "dps",
-	DEFAULT_ASK_MESSAGE = "Hi! I am a %talents% %class%, level %level%. Inv please?",
-	DEFAULT_INVITE_MESSAGE = "Hey! Want to join %dungeon%?",
+	MESSAGE_LANGUAGE = "Messages: |cffffffff%s|r",
+	MESSAGE_LANGUAGE_TITLE = "Language of the messages",
+	MESSAGE_LANGUAGE_TIP = "\"Invite\" and \"Ask to join\" whisper in this language. Click to change.",
+	SET_MESSAGE_LANGUAGE = "Language",
 
 	-- settings
 	SET_MESSAGES = "Messages",
@@ -107,7 +105,7 @@ local L = {
 	SET_INVITE_WHISPER_TIP = "Only when you lead the group or are alone.",
 	SET_INVITE_MESSAGE = "\"Invite\" message",
 	SET_INVITE_PLACEHOLDERS = "|cffffd200%dungeon%|r activities of your listing (or ticked in the filters)  ·  |cffffd200%name%|r player",
-	SET_PER_CHARACTER = "Messages are saved per character. Clear a box to go back to the default message.",
+	SET_PER_CHARACTER = "Messages are saved per character and per language: the boxes show the language chosen above (also at the bottom of the window). Clear a box to go back to the default message. Activity names (%dungeon%) stay in the game's language.",
 	SET_SEARCH = "Search",
 	SET_ALL_LEVELS = "Show activities of every level",
 	SET_ALL_LEVELS_TIP = "Off: only activities whose suggested level range includes yours.",
@@ -137,7 +135,6 @@ if GetLocale() == "ptBR" then
 		WINDOW_RESET = "posição e tamanho da janela restaurados.",
 		COMBAT_BLIZZARD = "O Localizador de Grupos da Blizzard não pode ser aberto por addon em combate.",
 		FINDER_COMBAT = "O localizador de grupos não pôde ser carregado em combate. Tente de novo depois da luta.",
-		OR = "ou",
 
 		TAB_CREATE = "Criar anúncio",
 		TAB_BROWSE = "Procurar grupos",
@@ -213,11 +210,10 @@ if GetLocale() == "ptBR" then
 		REPLY = "Responder",
 		WHERE = "Onde está",
 
-		WORD_TANK = "tanque",
-		WORD_HEALER = "cura",
-		WORD_DAMAGE = "dano",
-		DEFAULT_ASK_MESSAGE = "Oi! Sou %class% (%talents%), nível %level%. Pode me convidar?",
-		DEFAULT_INVITE_MESSAGE = "Oi! Quer entrar no grupo para %dungeon%?",
+		MESSAGE_LANGUAGE = "Mensagens: |cffffffff%s|r",
+		MESSAGE_LANGUAGE_TITLE = "Idioma das mensagens",
+		MESSAGE_LANGUAGE_TIP = "\"Convidar\" e \"Pedir para entrar\" sussurram neste idioma. Clique para trocar.",
+		SET_MESSAGE_LANGUAGE = "Idioma",
 
 		SET_MESSAGES = "Mensagens",
 		SET_ASK_WHISPER = "\"Pedir para entrar\" sussurra a mensagem ao líder do grupo",
@@ -228,7 +224,7 @@ if GetLocale() == "ptBR" then
 		SET_INVITE_WHISPER_TIP = "Só quando você lidera o grupo ou está sozinho.",
 		SET_INVITE_MESSAGE = "Mensagem de \"Convidar\"",
 		SET_INVITE_PLACEHOLDERS = "|cffffd200%dungeon%|r atividades do seu anúncio (ou marcadas nos filtros)  ·  |cffffd200%name%|r jogador",
-		SET_PER_CHARACTER = "As mensagens são salvas por personagem. Apague o texto para voltar à mensagem padrão.",
+		SET_PER_CHARACTER = "As mensagens são salvas por personagem e por idioma: as caixas mostram o idioma escolhido acima (também no rodapé da janela). Apague o texto para voltar à mensagem padrão. Os nomes das atividades (%dungeon%) ficam no idioma do jogo.",
 		SET_SEARCH = "Busca",
 		SET_ALL_LEVELS = "Mostrar atividades de todos os níveis",
 		SET_ALL_LEVELS_TIP = "Desligado: só atividades cuja faixa de nível sugerida inclui o seu.",
