@@ -340,16 +340,22 @@ function List:Refresh()
 	Footer(result)
 end
 
--- Redraw one listing in place (a late leader name, a delisting).
+-- Redraw one listing in place (a late leader name, a delisting). The event comes once per
+-- result after each search: the visitor is made once, not a closure per event.
+local wantedResult
+local function VisitRow(frame, elementData)
+	local node = elementData and elementData.data
+	if node and node.resultID == wantedResult then
+		UpdateRow(frame, node)
+		return true
+	end
+end
+
 local function UpdateResult(resultID)
 	if not panel or not panel:IsVisible() or not panel.ScrollBox:GetDataProvider() then return end
-	panel.ScrollBox:ForEachFrame(function(frame, elementData)
-		local node = elementData and elementData.data
-		if node and node.resultID == resultID then
-			UpdateRow(frame, node)
-			return true
-		end
-	end)
+	wantedResult = resultID
+	panel.ScrollBox:ForEachFrame(VisitRow)
+	wantedResult = nil
 end
 
 function List:SetQuery(text)
