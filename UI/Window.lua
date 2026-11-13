@@ -95,7 +95,7 @@ local function SideTabs(frame)
 		end)
 	end
 	local own = Add()
-	own.Icon:SetAtlas(ns.icon)
+	own.Icon:SetTexture(ns.icon)
 	own.tooltipText = ns.name
 	own:SetChecked(true)
 end
@@ -114,7 +114,7 @@ local function Build()
 	local content = CreateFrame("Frame", nil, frame, "PortraitFrameTemplateNoCloseButton")
 	content:SetAllPoints()
 	content:SetTitle(ns.name)
-	content:SetPortraitAtlasRaw(ns.icon)
+	content:SetPortraitTextureRaw(ns.icon)
 
 	local close = CreateFrame("Button", nil, frame, "UIPanelCloseButtonNoScripts")
 	close:SetPoint("TOPRIGHT")

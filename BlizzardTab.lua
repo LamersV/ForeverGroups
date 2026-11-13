@@ -12,7 +12,7 @@ local function Build()
 	local parent = LFGParentFrame
 	if tab or not parent or not parent.WhoListingTab then return end
 	tab = CreateFrame("Frame", "ForeverGroupsBlizzardTab", parent, "LargeSideTabButtonTemplate")
-	tab.Icon:SetAtlas(ns.icon)
+	tab.Icon:SetTexture(ns.icon)
 	tab.Icon:SetSize(30, 30)
 	tab:SetFillToInterior(true)
 	-- below LFG Forever's tab while both addons are enabled

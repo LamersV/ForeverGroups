@@ -4,7 +4,7 @@
 ## Notes-ptBR: Procurar grupo: busca com filtros, listas de jogadores e grupos, convite e sussurro rápidos. Digite /fg
 ## Author: Lamers
 ## Version: 1.0.0
-## IconAtlas: friends-icon-tab-quickJoin
+## IconTexture: Interface\AddOns\ForeverGroups\Media\icon
 ## Category: Group Finder
 ## Category-ptBR: Localizador de Grupos
 ## SavedVariables: ForeverGroupsDB

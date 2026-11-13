@@ -15,7 +15,8 @@ local ADDON, ns = ...
 ns.name = "ForeverGroups"
 ns.title = "|cff4fc3f7Forever|rGroups"
 ns.version = C_AddOns.GetAddOnMetadata(ADDON, "Version") or "dev"
-ns.icon = "friends-icon-tab-quickJoin"
+-- our painted icon (a dungeon portal); ForeverMap's tools\import_icon_sheets.py makes it
+ns.icon = "Interface\\AddOns\\ForeverGroups\\Media\\icon"
 
 
 --[[ Secret values ]]--
